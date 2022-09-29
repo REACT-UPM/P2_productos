@@ -153,9 +153,9 @@ test(JSON.stringify(testinfo), () => {
   const theselector2 = document.querySelector('#selector');
   expect(theselector2).toBeInTheDocument();
   const selectoroptions2 = document.querySelectorAll('#selector option');
-  expect(selectoroptions2.length).toBe(7);
+  expect(selectoroptions2.length).toBe(9);
   expect([...selectoroptions2].map((x)=>x.value)).toEqual(
-    expect.arrayContaining(["All", "tops", "womens-dresses", "womens-shoes", "mens-shirts", "mens-shoes", "mens-watches"]));
+    expect.arrayContaining(["All", "home-decoration", "furniture", "tops", "womens-dresses", "womens-shoes", "mens-shirts", "mens-shoes", "mens-watches"]));
 });
 
 
