@@ -215,7 +215,8 @@ test(JSON.stringify(testinfo), async () => {
   await waitFor(async () => {
     const titulo = document.querySelector('#titulo');
     expect(titulo).toBeInTheDocument();
-    expect(titulo).toHaveTextContent(studentmockproducts.products[3].title);
+    //check product with id 3 is rendered
+    expect(titulo).toHaveTextContent(studentmockproducts.products.find((x)=>x.id===3).title);
   
     const divlocation = document.querySelector('#divlocation');
     expect(divlocation).toBeInTheDocument();
