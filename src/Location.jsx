@@ -1,5 +1,5 @@
-import {useParams, useLocation} from "react-router-dom";
-import { useSearchParams } from "react-router-dom";
+import {useParams, useLocation} from "react-router";
+import { useSearchParams } from "react-router";
 
 
 export default function Location(props) {
