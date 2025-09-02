@@ -6,12 +6,12 @@ import user_info from '../../user.json';
 import {mockdata} from "../utils/products.js";
 import {mockdata2} from "../utils/products2.js";
 import {mockdata as studentmockproducts} from "../../src/constants/products";
-import {MemoryRouter, BrowserRouter} from 'react-router-dom';
+import {MemoryRouter, BrowserRouter} from 'react-router';
 
 
 const mytestconfig = {
   server_url: "https://dummyjson.com/products",
-  num_items: 30,  
+  num_items: 100,  
   use_server: false,
   loading_timeout_ms: 2000
 };
@@ -26,7 +26,7 @@ jest.mock('../../src/config/config', () => ( {
 afterAll(() => jest.resetAllMocks());
 
 beforeAll(() => {
-  jest.useFakeTimers()
+  jest.useFakeTimers()  
 });
 
 // Running all pending timers and switching to real timers using Jest
@@ -59,16 +59,16 @@ test(JSON.stringify(testinfo), () => {
 });
 
 testinfo = {
-  name: "La aplicación, mientras carga, muestra un spinner con una clase 'spinner' y un id 'loading'",
-  score: 1,
+  name: "La aplicación, mientras carga, muestra un spinner con una clase y un id adecuados",
+  score: 0.5,
   msg_ok: "spinner encontrado",
   msg_error: "spinner NO encontrado mientras la aplicación carga"
 }
 test(JSON.stringify(testinfo), () => {
   render(<BrowserRouter><App /></BrowserRouter>);
-  const spinner = document.querySelector('#loading');
+  const spinner = document.querySelector('#myspinner');
   expect(spinner).toBeInTheDocument();
-  const spinnerbyclass = document.querySelector('.spinner');
+  const spinnerbyclass = document.querySelector('.loading');
   expect(spinnerbyclass).toBeInTheDocument();
   const catalogo = document.querySelector('#catalogo');
   expect(catalogo).not.toBeInTheDocument();
@@ -100,14 +100,14 @@ testinfo = {
 }
 test(JSON.stringify(testinfo), () => {
   render(<BrowserRouter><SearchPage theproducts={mockdata.products} /></BrowserRouter>);
-  const productos = document.querySelectorAll('#productosresultados .unproducto');
-  expect(productos.length).toBe(37);
+  const productos = document.querySelectorAll('#productosresultados .miproducto');
+  expect(productos.length).toBe(100);
 });
 
 
 testinfo = {
   name: "La aplicación maneja el valor del input y filtra los resultados por su título al pulsar el button",
-  score: 1,
+  score: 0.5,
   msg_ok: "El input de la aplicación funciona correctamente y filtra al pulsar el botón",
   msg_error: "El input de la aplicación NO funciona correctamente o NO filtra al pulsar el botón"
 }
@@ -117,61 +117,62 @@ test(JSON.stringify(testinfo), () => {
   expect(theinput).toBeInTheDocument();
   const buscabtn = document.querySelector('#buscador');
   expect(buscabtn).toBeInTheDocument();
-  fireEvent.change(theinput, {target: {value: "moto"}})
-  expect(theinput).toHaveValue("moto");
+  fireEvent.change(theinput, {target: {value: "me"}})
+  expect(theinput).toHaveValue("me");
   fireEvent.click(buscabtn);
-  const productos = document.querySelectorAll('#productosresultados .unproducto');
-  expect(productos.length).toBe(4);
+  const productos = document.querySelectorAll('#productosresultados .miproducto');
+  expect(productos.length).toBe(5);
 });
 
 
 testinfo = {
   name: "La aplicación tiene un selector de categorías de productos y está relleno correctamente para mockdata",
-  score: 0.5,
+  score: 0.25,
   msg_ok: "Selector de categorías de productos encontrado y bien relleno",
   msg_error: "Selector de categorías de productos NO encontrado o NO está bien relleno"
 }
 test(JSON.stringify(testinfo), () => {
   render(<BrowserRouter><SearchPage theproducts={mockdata.products} /></BrowserRouter>);
-  const theselector = document.querySelector('#selector');
+  const theselector = document.querySelector('#miselector');
   expect(theselector).toBeInTheDocument();
-  const selectoroptions = document.querySelectorAll('#selector option');
-  expect(selectoroptions.length).toBe(9);
+  const selectoroptions = document.querySelectorAll('#miselector option');
+  expect(selectoroptions.length).toBe(12);
   expect([...selectoroptions].map((x)=>x.value)).toEqual(
-    expect.arrayContaining(["All", "mens-watches", "womens-watches", "womens-bags", "womens-jewellery", "sunglasses", "automotive", "motorcycle", "lighting"]));
+    expect.arrayContaining([ "All", "beauty", "fragrances", "furniture", "groceries", "home-decoration", "kitchen-accessories", "laptops", "mens-shirts", "mens-shoes"])
+  );
 });
 
 
 testinfo = {
   name: "La aplicación tiene un selector de categorías de productos y está relleno correctamente para mockdata2",
-  score: 0.5,
+  score: 0.25,
   msg_ok: "Selector de categorías de productos encontrado y bien relleno",
   msg_error: "Selector de categorías de productos NO encontrado o NO está bien relleno"
 }
 test(JSON.stringify(testinfo), () => {    
   render(<BrowserRouter><SearchPage theproducts={mockdata2.products} /></BrowserRouter>);
-  const theselector2 = document.querySelector('#selector');
+  const theselector2 = document.querySelector('#miselector');
   expect(theselector2).toBeInTheDocument();
-  const selectoroptions2 = document.querySelectorAll('#selector option');
+  const selectoroptions2 = document.querySelectorAll('#miselector option');
   expect(selectoroptions2.length).toBe(7);
   expect([...selectoroptions2].map((x)=>x.value)).toEqual(
-    expect.arrayContaining(["All", "tops", "womens-dresses", "womens-shoes", "mens-shirts", "mens-shoes", "mens-watches"]));
+    expect.arrayContaining(["All", "beauty", "fragrances", "furniture", "groceries", "mobile-accessories", "smartphones"])
+  );
 });
-
 
 testinfo = {
   name: "La aplicación tiene un selector de categorías de productos y filtra al seleccionar una categoría",
-  score: 1,
+  score: 0.5,
   msg_ok: "El selector de categorías funciona correctamente",
   msg_error: "El selector de categorías NO funciona correctamente"
 }
 test(JSON.stringify(testinfo), () => {
   render(<BrowserRouter><SearchPage theproducts={mockdata.products} /></BrowserRouter>);
-  const theselector = document.querySelector('#selector');
+  const theselector = document.querySelector('#miselector');
   expect(theselector).toBeInTheDocument();
-  fireEvent.change(theselector, {target: {value: "automotive"}})
+  fireEvent.change(theselector, {target: {value: "fragrances"}})
 
-  const productos = document.querySelectorAll('#productosresultados .unproducto');
+  const productos = document.querySelectorAll('#productosresultados .miproducto');
   expect(productos.length).toBe(5);
 });
 
@@ -183,13 +184,13 @@ testinfo = {
 }
 test(JSON.stringify(testinfo), () => {
   render(<BrowserRouter><SearchPage theproducts={mockdata.products} /></BrowserRouter>);
-  const theselector = document.querySelector('#selector');
+  const theselector = document.querySelector('#miselector');
   expect(theselector).toBeInTheDocument();
-  fireEvent.change(theselector, {target: {value: "sunglasses"}})
+  fireEvent.change(theselector, {target: {value: "furniture"}})
 
   const divlocation = document.querySelector('#divsearch');
   expect(divlocation).toBeInTheDocument();
-  expect(divlocation).toHaveTextContent("Category sunglasses");
+  expect(divlocation).toHaveTextContent("Category furniture");
 
 });
 
@@ -206,7 +207,7 @@ test(JSON.stringify(testinfo), async () => {
     json: () => Promise.resolve(mockdata)
   }));
 
-  render(<MemoryRouter initialEntries={["/products/3"]}>
+  render(<MemoryRouter initialEntries={["/products/17"]}>
     <App />
   </MemoryRouter>);
   //run the setTimeout so the loading spinner is removed from the UX
@@ -215,19 +216,111 @@ test(JSON.stringify(testinfo), async () => {
   await waitFor(async () => {
     const titulo = document.querySelector('#titulo');
     expect(titulo).toBeInTheDocument();
-    //check product with id 3 is rendered
-    expect(titulo).toHaveTextContent(studentmockproducts.products.find((x)=>x.id===3).title);
+    //check product with id 17 is rendered
+    //we use studentmockproducts because in this case we are using App that uses constants/products.js as mock data
+    expect(titulo).toHaveTextContent(studentmockproducts.products.find((x)=>x.id===17).title);
   
     const divlocation = document.querySelector('#divlocation');
     expect(divlocation).toBeInTheDocument();
-    expect(divlocation).toHaveTextContent("/products/3");
+    expect(divlocation).toHaveTextContent("/products/17");
 
     const divproductid = document.querySelector('#divproductid');
     expect(divproductid).toBeInTheDocument();
-    expect(divproductid).toHaveTextContent("3");
+    expect(divproductid).toHaveTextContent("17");
 
     const volver = document.querySelector('#volver');
     expect(volver).toBeInTheDocument();    
+  });
+});
+
+
+testinfo = {
+  name: "La aplicación en la página del producto renderiza los últimos 3 comentarios del producto",
+  score: 0.5,
+  msg_ok: "Los comentarios de la página del producto funciona correctamente",
+  msg_error: "Los comentarios de la página del producto NO funcionan correctamente"
+}
+test(JSON.stringify(testinfo), async () => {
+  global.fetch = jest.fn(() => Promise.resolve({
+    status: 200,
+    json: () => Promise.resolve(mockdata)
+  }));
+
+  render(<MemoryRouter initialEntries={["/products/7"]}>
+    <App />
+  </MemoryRouter>);
+  //run the setTimeout so the loading spinner is removed from the UX
+  act(()=>jest.runAllTimers());
+
+  await waitFor(async () => {
+    /*○	Hay un elemento div con un id “comments”
+○	Dentro hay un div y dentro tiene un span con id “mediaresultado” que muestra la media de los comentarios recibidos (campo reviews->rating)
+○	Debajo hay un h5 que tiene como contenido “Ultimos 3 comentarios:”
+○	Los últimos 3 comentarios se deben recorrer con un map. Cada comentario aparece en un div con clase “comment” y contiene como la captura superior muestra el nombre del autor del comentario, el contenido y rating.
+*/
+    const commentsDiv = document.querySelector('#comments');
+    expect(commentsDiv).toBeInTheDocument();
+
+    const mediaResult = document.querySelector('#mediaresult');
+    expect(mediaResult).toBeInTheDocument();
+    expect(mediaResult).toHaveTextContent(4.20);
+
+    const ultimosComentarios = document.querySelector('h5');
+    expect(ultimosComentarios).toBeInTheDocument();
+    expect(ultimosComentarios).toHaveTextContent("Últimos 3 comentarios:");
+
+    const commentDivs = commentsDiv.querySelectorAll('.comment');
+    expect(commentDivs.length).toBe(3);
+      expect(commentsDiv).toHaveTextContent("Olivia Brown");
+      expect(commentsDiv).toHaveTextContent("Amazing scent!");
+      expect(commentsDiv).toHaveTextContent("Sophia Turner");
+      expect(commentsDiv).toHaveTextContent("Excellent quality!");
+      expect(commentsDiv).toHaveTextContent("Xavier Wright");
+      //do not contain "Leah Henderson"
+      expect(commentsDiv).not.toHaveTextContent("Leah Henderson");
+  });
+});
+
+
+testinfo = {
+  name: "La aplicación en la página del producto renderiza los últimos 3 comentarios del producto (2º render)",
+  score: 0.5,
+  msg_ok: "Los comentarios de la página del producto funciona correctamente",
+  msg_error: "Los comentarios de la página del producto NO funcionan correctamente"
+}
+test(JSON.stringify(testinfo), async () => {
+  global.fetch = jest.fn(() => Promise.resolve({
+    status: 200,
+    json: () => Promise.resolve(mockdata)
+  }));
+  render(<MemoryRouter initialEntries={["/products/25"]}>
+    <App />
+  </MemoryRouter>);
+  //run the setTimeout so the loading spinner is removed from the UX
+  act(()=>jest.runAllTimers());
+
+  await waitFor(async () => {
+    /*○	Hay un elemento div con un id “comments”
+○	Dentro hay un div y dentro tiene un span con id “mediaresultado” que muestra la media de los comentarios recibidos (campo reviews->rating)
+○	Debajo hay un h5 que tiene como contenido “Ultimos 3 comentarios:”
+○	Los últimos 3 comentarios se deben recorrer con un map. Cada comentario aparece en un div con clase “comment” y contiene como la captura superior muestra el nombre del autor del comentario, el contenido y rating.
+*/
+    const commentsDiv = document.querySelector('#comments');
+    expect(commentsDiv).toBeInTheDocument();
+
+    const mediaResult = document.querySelector('#mediaresult');
+    expect(mediaResult).toBeInTheDocument();
+    expect(mediaResult).toHaveTextContent(4.00);
+
+    const ultimosComentarios = document.querySelector('h5');
+    expect(ultimosComentarios).toBeInTheDocument();
+    expect(ultimosComentarios).toHaveTextContent("Últimos 3 comentarios:");
+
+    const commentDivs = commentsDiv.querySelectorAll('.comment');
+    expect(commentDivs.length).toBe(3);
+      expect(commentsDiv).toHaveTextContent("Addison Wright");
+      expect(commentsDiv).toHaveTextContent("Henry Hill");
+      expect(commentsDiv).toHaveTextContent("Avery Carter");
   });
 });
 
