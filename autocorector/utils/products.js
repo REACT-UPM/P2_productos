@@ -386,28 +386,42 @@ export const mockdata = {
       "warrantyInformation": "3 year warranty",
       "shippingInformation": "Ships overnight",
       "availabilityStatus": "In Stock",
-      "reviews": [
-        {
-          "rating": 4,
-          "comment": "Highly impressed!",
-          "date": "2025-04-30T09:41:02.053Z",
-          "reviewerName": "Ruby Andrews",
-          "reviewerEmail": "ruby.andrews@x.dummyjson.com"
-        },
-        {
-          "rating": 5,
-          "comment": "Awesome product!",
-          "date": "2025-04-30T09:41:02.053Z",
-          "reviewerName": "Leah Henderson",
-          "reviewerEmail": "leah.henderson@x.dummyjson.com"
-        },
+      "reviews": [        
         {
           "rating": 5,
           "comment": "Very happy with my purchase!",
           "date": "2025-04-30T09:41:02.053Z",
           "reviewerName": "Xavier Wright",
           "reviewerEmail": "xavier.wright@x.dummyjson.com"
-        }
+        },
+        {
+          "rating": 5,
+          "comment": "Amazing scent!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "reviewerName": "Olivia Brown",
+          "reviewerEmail": "hola2.brown@x.dummyjson.com"
+        },
+        {
+          "rating": 2,
+          "comment": "Muy mal producto!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "reviewerName": "Sophia Turner",
+          "reviewerEmail": "pepe.turner@x.dummyjson.com"
+        },
+        {
+          "rating": 4,
+          "comment": "Muy impresionado!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "reviewerName": "Pepe Perez",
+          "reviewerEmail": "pepe.perez@x.dummyjson.com"
+        },
+        {
+          "rating": 5,
+          "comment": "Producto excelente!",
+          "date": "2025-04-30T09:41:02.053Z",
+          "reviewerName": "Leah Henderson",
+          "reviewerEmail": "leah.henderson@x.dummyjson.com"
+        },
       ],
       "returnPolicy": "No return policy",
       "minimumOrderQuantity": 1,
@@ -1484,10 +1498,31 @@ export const mockdata = {
         },
         {
           "rating": 5,
-          "comment": "Excellent quality!",
+          "comment": "Me ha encantado",
           "date": "2025-04-30T09:41:02.053Z",
-          "reviewerName": "Addison Wright",
-          "reviewerEmail": "addison.wright@x.dummyjson.com"
+          "reviewerName": "Jose López",
+          "reviewerEmail": "jose.lopez@x.dummyjson.com"
+        },
+        {
+          "rating": 4,
+          "comment": "Estupendo, aunque podría estar más fresco",
+          "date": "2025-04-30T09:41:02.053Z",
+          "reviewerName": "Alonso Wright",
+          "reviewerEmail": "alonso.wright@x.dummyjson.com"
+        },
+        {
+          "rating": 2,
+          "comment": "Fatal, no lo recomiendo",
+          "date": "2025-04-30T09:41:02.053Z",
+          "reviewerName": "Santiago Martínez",
+          "reviewerEmail": "santiago.martinez@x.dummyjson.com"
+        },
+        {
+          "rating": 2,
+          "comment": "Muy malo, no lo compréis",
+          "date": "2025-04-30T09:41:02.053Z",
+          "reviewerName": "María García",
+          "reviewerEmail": "maria.garcia@x.dummyjson.com"
         }
       ],
       "returnPolicy": "30 days return policy",

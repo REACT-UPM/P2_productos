@@ -66,6 +66,100 @@ test(JSON.stringify(testinfo), async () => {
 
 
 testinfo = {
+  name: "La aplicación en la página del producto renderiza los últimos 3 comentarios del producto",
+  score: 0.5,
+  msg_ok: "Los comentarios de la página del producto funciona correctamente",
+  msg_error: "Los comentarios de la página del producto NO funcionan correctamente"
+}
+test(JSON.stringify(testinfo), async () => {
+  global.fetch = jest.fn(() => Promise.resolve({
+    status: 200,
+    json: () => Promise.resolve(mockdata)
+  }));
+
+  render(<MemoryRouter initialEntries={["/products/7"]}>
+    <App />
+  </MemoryRouter>);
+  //run the setTimeout so the loading spinner is removed from the UX
+  act(()=>jest.runAllTimers());
+
+  await waitFor(async () => {
+    /*○	Hay un elemento div con un id “comments”
+○	Dentro hay un div y dentro tiene un span con id “mediaresultado” que muestra la media de los comentarios recibidos (campo reviews->rating)
+○	Debajo hay un h5 que tiene como contenido “Ultimos 3 comentarios:”
+○	Los últimos 3 comentarios se deben recorrer con un map. Cada comentario aparece en un div con clase “comment” y contiene como la captura superior muestra el nombre del autor del comentario, el contenido y rating.
+*/
+    const commentsDiv = document.querySelector('#comments');
+    expect(commentsDiv).toBeInTheDocument();
+
+    const mediaResult = document.querySelector('#mediaresult');
+    expect(mediaResult).toBeInTheDocument();
+    expect(mediaResult).toHaveTextContent(4.20);
+
+    const ultimosComentarios = document.querySelector('h5');
+    expect(ultimosComentarios).toBeInTheDocument();
+    expect(ultimosComentarios).toHaveTextContent("Últimos 3 comentarios:");
+
+    const commentDivs = commentsDiv.querySelectorAll('.comment');
+    expect(commentDivs.length).toBe(3);
+      expect(commentsDiv).toHaveTextContent("Pepe Perez");
+      expect(commentsDiv).toHaveTextContent("Muy impresionado!");
+      expect(commentsDiv).toHaveTextContent("Leah Henderson");
+      expect(commentsDiv).toHaveTextContent("Producto excelente!");
+      expect(commentsDiv).toHaveTextContent("Sophia Turner");
+      //do not contain "Olivia Brown" which is not in the last 3 comments
+      expect(commentsDiv).not.toHaveTextContent("Olivia Brown");
+  });
+});
+
+
+testinfo = {
+  name: "La aplicación en la página del producto renderiza los últimos 3 comentarios del producto (2º render)",
+  score: 0.5,
+  msg_ok: "Los comentarios de la página del producto funciona correctamente",
+  msg_error: "Los comentarios de la página del producto NO funcionan correctamente"
+}
+test(JSON.stringify(testinfo), async () => {
+  global.fetch = jest.fn(() => Promise.resolve({
+    status: 200,
+    json: () => Promise.resolve(mockdata)
+  }));
+  render(<MemoryRouter initialEntries={["/products/25"]}>
+    <App />
+  </MemoryRouter>);
+  //run the setTimeout so the loading spinner is removed from the UX
+  act(()=>jest.runAllTimers());
+
+  await waitFor(async () => {
+    /*○	Hay un elemento div con un id “comments”
+○	Dentro hay un div y dentro tiene un span con id “mediaresultado” que muestra la media de los comentarios recibidos (campo reviews->rating)
+○	Debajo hay un h5 que tiene como contenido “Ultimos 3 comentarios:”
+○	Los últimos 3 comentarios se deben recorrer con un map. Cada comentario aparece en un div con clase “comment” y contiene como la captura superior muestra el nombre del autor del comentario, el contenido y rating.
+*/
+    const commentsDiv = document.querySelector('#comments');
+    expect(commentsDiv).toBeInTheDocument();
+
+    const mediaResult = document.querySelector('#mediaresult');
+    expect(mediaResult).toBeInTheDocument();
+    expect(mediaResult).toHaveTextContent(3.33);
+
+    const ultimosComentarios = document.querySelector('h5');
+    expect(ultimosComentarios).toBeInTheDocument();
+    expect(ultimosComentarios).toHaveTextContent("Últimos 3 comentarios:");
+
+    const commentDivs = commentsDiv.querySelectorAll('.comment');
+    expect(commentDivs.length).toBe(3);
+      expect(commentsDiv).toHaveTextContent("Alonso Wright");
+      expect(commentsDiv).toHaveTextContent("Santiago Martínez");
+      expect(commentsDiv).toHaveTextContent("María García");
+      //do not contain "Jose López" which is not in the last 3 comments
+      expect(commentsDiv).not.toHaveTextContent("Jose López");
+  });
+});
+
+
+
+testinfo = {
   name: "La aplicación llama a la IA para generar un resumen de los comentarios",
   score: 1,
   msg_ok: "El resumen de los comentarios con IA funciona correctamente",
