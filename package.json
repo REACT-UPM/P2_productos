@@ -11,7 +11,7 @@
     "githubURL": "REACT-UPM/P2_productos",
     "serverUrl": "https://aat.dit.upm.es/",
     "courseId": "396",
-    "assignmentId": "7799"
+    "assignmentId": "133"
   },
   "scripts": {
     "dev": "vite",
