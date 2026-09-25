@@ -1,0 +1,54 @@
+/*
+  CONFIGURACIÓN DE LA APLICACIÓN
+
+  Este fichero es la PLANTILLA. Lo primero que hay que hacer es copiarlo:
+
+      cp src/config/config.js.example src/config/config.js
+
+  y rellenar en la copia vuestra API key. El fichero config.js está en el .gitignore
+  precisamente para que vuestra clave no acabe subida al repositorio.
+*/
+const CONFIG = {
+
+  //--- API de IA (Groq), para el resumen de los comentarios ------------------------------
+
+  //Vuestra clave personal de Groq. Se obtiene creando una cuenta gratuita en
+  //https://console.groq.com y generándola en https://console.groq.com/keys
+  //Groq solo la enseña UNA vez, así que copiadla en ese momento. Empieza por "gsk_".
+  //Cada uno debe usar la suya: las cuotas van por cuenta.
+  groq_api_key: "<YOUR_API_KEY_HERE>",
+
+  //Modelo de IA que se usa para el resumen. Va en configuración y no cableado en el código
+  //porque los proveedores retiran modelos cada pocos meses: llama-3.3-70b-versatile, que era
+  //el que estaba aquí, se retiró el 16-08-2026 y desde entonces la API devuelve 404.
+  //SI EL BOTÓN DEL RESUMEN DA UN 404 mirad aquí antes que en la URL: lo más probable es que
+  //este modelo ya no exista. Lista actualizada en https://console.groq.com/docs/models
+  groq_model: "openai/gpt-oss-120b",
+
+  //--- API de productos (DummyJSON) -----------------------------------------------------
+
+  //Endpoint del catálogo. La aplicación NO debe llevar esta URL escrita en el código:
+  //tiene que leerla de aquí. Documentación en https://dummyjson.com/docs/products
+  server_url: "https://dummyjson.com/products",
+
+  //Cuántos productos se piden al servidor (se envía como ?limit=). DummyJSON tiene 194,
+  //así que subiendo este número tendréis más productos y más categorías en el selector.
+  num_items: 30,
+
+  //--- Modo de trabajo ------------------------------------------------------------------
+
+  //false = la aplicación usa los datos de src/constants (mock), sin tocar la red.
+  //true  = la aplicación llama de verdad al servidor.
+  //Se recomienda empezar con false para desarrollar con datos controlados y pasar a true
+  //cuando todo funcione. Ojo: el corrector prueba los dos casos.
+  use_server: true,
+
+  //Retardo artificial (en milisegundos) antes de cargar los datos mock. Existe para que el
+  //spinner se pueda VER: sin él los datos mock estarían disponibles al instante y la pantalla
+  //de carga pasaría tan rápido que no sabríais si la habéis hecho bien. Si vuestro spinner no
+  //aparece nunca con use_server a false, subid este valor a 3000 y volved a probar.
+  //No afecta cuando use_server es true: ahí la espera la marca el servidor.
+  loading_timeout_ms: 300
+}
+
+export default CONFIG;

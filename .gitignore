@@ -25,3 +25,4 @@ dist-ssr
 
 user.json
 /autocorector/data
+src/config/config.js

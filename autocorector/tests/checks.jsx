@@ -1,4 +1,4 @@
-import {render, fireEvent, waitFor, screen, act} from '@testing-library/react'
+import {render, fireEvent, waitFor, screen, act, cleanup} from '@testing-library/react'
 import App from '../../src/App';
 import Header from '../../src/Header';
 import SearchPage from '../../src/SearchPage';
@@ -26,7 +26,14 @@ jest.mock('../../src/config/config', () => ( {
 afterAll(() => jest.resetAllMocks());
 
 beforeAll(() => {
-  jest.useFakeTimers()  
+  jest.useFakeTimers()
+});
+
+//Los tests usan BrowserRouter, que lee y escribe la URL real de jsdom, y esa URL es COMPARTIDA
+//entre todos los tests del fichero. Sin esto, los parámetros que deja un test (?q=..., ?category=...)
+//siguen puestos en el siguiente y lo hacen fallar. Cada test debe partir de una URL limpia.
+beforeEach(() => {
+  window.history.pushState({}, "", "/");
 });
 
 // Running all pending timers and switching to real timers using Jest
@@ -177,12 +184,14 @@ test(JSON.stringify(testinfo), () => {
 });
 
 testinfo = {
-  name: "La aplicación utiliza parámetros en la ruta para guardar la categoría seleccionada (con useSearchParams)",
+  name: "La aplicación guarda los dos filtros en la ruta con useSearchParams y calcula la lista a partir de ellos",
   score: 1,
   msg_ok: "UseSearchParams funciona correctamente",
   msg_error: "UseSearchParams NO funciona correctamente"
 }
 test(JSON.stringify(testinfo), () => {
+  const cuentaProductos = () => document.querySelectorAll('#productosresultados .miproducto').length;
+
   render(<BrowserRouter><SearchPage theproducts={mockdata.products} /></BrowserRouter>);
   const theselector = document.querySelector('#miselector');
   expect(theselector).toBeInTheDocument();
@@ -191,7 +200,40 @@ test(JSON.stringify(testinfo), () => {
   const divlocation = document.querySelector('#divsearch');
   expect(divlocation).toBeInTheDocument();
   expect(divlocation).toHaveTextContent("Category furniture");
+  expect(window.location.search).toContain("category=furniture");
+  //en mockdata hay 5 productos de furniture
+  expect(cuentaProductos()).toBe(5);
 
+  //el texto buscado también va a la ruta, y se combina con la categoría sin perderla.
+  //"table" aparece en 2 títulos de todo el catálogo, pero solo en 1 dentro de furniture:
+  //si saliera 5 se estaría ignorando el texto, y si saliera 2 se estaría perdiendo la categoría
+  fireEvent.change(document.querySelector('#filtro'), {target: {value: "table"}});
+  fireEvent.click(document.querySelector('#buscador'));
+  expect(window.location.search).toContain("category=furniture");
+  expect(window.location.search).toContain("q=table");
+  expect(cuentaProductos()).toBe(1);
+  //y el selector sigue mostrando la categoría: la pantalla no se contradice
+  expect(theselector).toHaveValue("furniture");
+
+  //volver a "All" quita el parámetro de la ruta pero conserva la búsqueda
+  fireEvent.change(theselector, {target: {value: "All"}});
+  expect(window.location.search).not.toContain("category");
+  expect(window.location.search).toContain("q=table");
+  expect(cuentaProductos()).toBe(2);
+
+  //sin filtros la ruta queda limpia, sin ?category=All&q=
+  fireEvent.change(document.querySelector('#filtro'), {target: {value: ""}});
+  fireEvent.click(document.querySelector('#buscador'));
+  expect(window.location.search).toBe("");
+  expect(cuentaProductos()).toBe(100);
+
+  //y al revés: al entrar directamente por una ruta con los dos filtros (un enlace compartido)
+  //el selector aparece relleno y la lista sale ya filtrada por ambos
+  cleanup();
+  window.history.pushState({}, "", "/?category=furniture&q=table");
+  render(<BrowserRouter><SearchPage theproducts={mockdata.products} /></BrowserRouter>);
+  expect(document.querySelector('#miselector')).toHaveValue("furniture");
+  expect(cuentaProductos()).toBe(1);
 });
 
 
