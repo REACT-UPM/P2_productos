@@ -71,8 +71,10 @@ testinfo = {
   msg_ok: "spinner encontrado",
   msg_error: "spinner NO encontrado mientras la aplicación carga"
 }
-test(JSON.stringify(testinfo), () => {
-  render(<BrowserRouter><App /></BrowserRouter>);
+test(JSON.stringify(testinfo), async () => {
+  await act(async () => {
+    render(<BrowserRouter><App /></BrowserRouter>);
+  });
   const spinner = document.querySelector('#myspinner');
   expect(spinner).toBeInTheDocument();
   const spinnerbyclass = document.querySelector('.loading');
@@ -249,9 +251,11 @@ test(JSON.stringify(testinfo), async () => {
     json: () => Promise.resolve(mockdata)
   }));
 
-  render(<MemoryRouter initialEntries={["/products/17"]}>
-    <App />
-  </MemoryRouter>);
+  await act(async () => {
+    render(<MemoryRouter initialEntries={["/products/17"]}>
+      <App />
+    </MemoryRouter>);
+  });
   //run the setTimeout so the loading spinner is removed from the UX
   act(()=>jest.runAllTimers());
 
@@ -285,9 +289,11 @@ testinfo = {
 }
 test(JSON.stringify(testinfo), async () => {
 
-  render(<MemoryRouter initialEntries={["/rutanoexiste"]}>
-    <App />
-  </MemoryRouter>);
+  await act(async () => {
+    render(<MemoryRouter initialEntries={["/rutanoexiste"]}>
+      <App />
+    </MemoryRouter>);
+  });
   //run the setTimeout so the loading spinner is removed from the UX
   act(()=>jest.runAllTimers());
 

@@ -23,6 +23,9 @@ jest.mock('../../src/config/config', () => ( {
 afterAll(() => jest.resetAllMocks());
 
 beforeEach(() => {
+  //cada test pide una URL distinta (?limit=51, ?limit=52...) para que una solución que cachee la
+  //promesa por URL (use() + Map) no reutilice los datos del test anterior
+  mytestconfig.num_items++;
   jest.useFakeTimers()
 });
 
@@ -45,12 +48,14 @@ test(JSON.stringify(testinfo), async () => {
     json: () => Promise.resolve(mockdata2)
   }));
 
-  render(<MemoryRouter initialEntries={["/"]}>
-    <App />
-  </MemoryRouter>);
+  await act(async () => {
+    render(<MemoryRouter initialEntries={["/"]}>
+      <App />
+    </MemoryRouter>);
+  });
   //run the setTimeout so the loading spinner is removed from the UX  
 
-  await waitForElementToBeRemoved(await document.querySelector('#myspinner'), { timeout: 8000 })
+  await waitFor(() => expect(document.querySelector('#myspinner')).not.toBeInTheDocument(), { timeout: 8000 });
 
   //console.log("IMPRIMIMOS EL BODY-------------------");
   //console.log(document.body.innerHTML);
@@ -77,9 +82,11 @@ test(JSON.stringify(testinfo), async () => {
     json: () => Promise.resolve(mockdata)
   }));
 
-  render(<MemoryRouter initialEntries={["/products/7"]}>
-    <App />
-  </MemoryRouter>);
+  await act(async () => {
+    render(<MemoryRouter initialEntries={["/products/7"]}>
+      <App />
+    </MemoryRouter>);
+  });
   //run the setTimeout so the loading spinner is removed from the UX
   act(()=>jest.runAllTimers());
 
@@ -124,9 +131,11 @@ test(JSON.stringify(testinfo), async () => {
     status: 200,
     json: () => Promise.resolve(mockdata)
   }));
-  render(<MemoryRouter initialEntries={["/products/25"]}>
-    <App />
-  </MemoryRouter>);
+  await act(async () => {
+    render(<MemoryRouter initialEntries={["/products/25"]}>
+      <App />
+    </MemoryRouter>);
+  });
   //run the setTimeout so the loading spinner is removed from the UX
   act(()=>jest.runAllTimers());
 
